@@ -12,7 +12,7 @@ absolute_path = os.path.abspath(__file__)
 dir_path = os.path.dirname(absolute_path)
 
 root = Tk()
-root.title("NMAIAS")
+root.title("NMAIAS - V" + str(version))
 icon = PhotoImage(file="icon.png")
 root.iconphoto(False, icon)
 
@@ -138,14 +138,14 @@ def new_subject():
             except:
                 messagebox.showinfo("Informação",
                                     "Não foi encontrado nenhum ficheiro chamado \" " + filename + "\" "
-                                                                                                  "pelo que vai ser criado um novo. Se já tem um ficheiro \" " + filename + "\","
-                                                                                                                                                                            "verifique se ele esta na mesma pasta que este programa")
+                                    "pelo que vai ser criado um novo. Se já tem um ficheiro \" " + filename + "\","
+                                    "verifique se ele esta na mesma pasta que este programa")
                 open(filename, "x")
             write_new_subject(filename, insert_cadeira_name.get(), insert_cadeira_id.get(),
                               insert_cadeira_zoom_T.get(), insert_cadeira_zoom_TP.get(), insert_cadeira_zoom_L.get(),
                               insert_password.get())
         else:
-            messagebox.showwarning("Aviso", "Por favor preencha todos os campos em branco")
+            messagebox.showwarning("Aviso", "Por favor preencha todos necessários os campos em branco")
         refresh_all_cadeiras()
 
     def limpar():
@@ -391,7 +391,7 @@ except:
 nmaias = Label(frame0, text="NMAIAS - Não Me Apetece Ir Ao Site")
 nmaias.grid(row=1, column=0, columnspan=10, sticky=W)
 
-nmaias = Button(name_frame, text="Luís Oliveira - GH", command=lambda: webbrowser.open_new_tab(
+nmaias = Button(name_frame, text="GitHub", command=lambda: webbrowser.open_new_tab(
     "https://github.com/ThEndGuy/NMAIAS"), bd=0, fg="BLUE", activeforeground="RED")
 underline_font = font.Font(nmaias, nmaias.cget("font"))
 underline_font.configure(underline=True)
