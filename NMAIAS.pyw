@@ -7,15 +7,14 @@ import webbrowser
 import os
 
 
-__VERSION__ = 1.3
+__VERSION__ = 1.29
 
 GH = "https://github.com/ThEndGuy/NMAIAS"
 gh_file_nmaias = "https://raw.githubusercontent.com/ThEndGuy/NMAIAS/main/NMAIAS.pyw"
 r = requests.get(gh_file_nmaias)
 program_in_list = r.text.split("\n")
-paragraph_program_in_list = []
-for string in program_in_list:
-    paragraph_program_in_list.append(string + "\n")
+
+
 
 
 updates_on = True
@@ -33,8 +32,6 @@ filename = dir_path + "\Cadeiras.txt"
 frame0 = Frame(root)
 frame0.grid(row=0, column=0)
 root.option_add('*font', 'Times 15')
-
-
 
 name_frame = Frame(root)
 name_frame.grid(row=2, column=0, sticky=E)
@@ -102,8 +99,8 @@ def update_check():
 
 
 def do_update():
-    self_file = open("NMAIAS.pyw", "w")
-    self_file.writelines(paragraph_program_in_list)
+    self_file = open("NMAIAS.pyw", "w", encoding='utf-8')
+    self_file.writelines(r.text)
 
 
 
