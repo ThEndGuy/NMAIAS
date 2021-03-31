@@ -7,10 +7,12 @@ import webbrowser
 import os
 
 
-__VERSION__ = open("version.txt","r").readlines()[0]
+__VERSION__ = 1.3
 
 GH = "https://github.com/ThEndGuy/NMAIAS"
-gh_file_version = "https://raw.githubusercontent.com/ThEndGuy/NMAIAS/main/version"
+gh_file_nmaias = "https://raw.githubusercontent.com/ThEndGuy/NMAIAS/main/NMAIAS.pyw"
+r = requests.get(gh_file_nmaias)
+program_in_list = r.text.split("\n")
 
 absolute_path = os.path.abspath(__file__)
 dir_path = os.path.dirname(absolute_path)
@@ -76,10 +78,22 @@ class Disciplina:
     def place_delete_cadeira_button(self, row, column, rowspan=1, columnspan=1, sticky=None):
         self.delete_cadeira.grid(row=row, column=column, rowspan=rowspan, columnspan=columnspan, sticky=sticky)
 
+def update_check():
+    cloud_version = float(program_in_list[9])
+    if __VERSION__ < cloud_version:
+        update = messagebox.askyesno("Atualização disponível!", "Uma nova atualização foi detetada. \n"
+                                                                "Versão local: V" + str(__VERSION__) + "\n"
+                                                                "Versão atual: V" + str(cloud_version) + "\n"
+                                                                "Deseja atualizar?")
+        if update:
+            do_update()
+        else:
+            pass
 
 
-
-
+def do_update():
+    self_file = open("NMAIAS.pyw","w")
+    self_file.writelines(program_in_list)
 
 
 
