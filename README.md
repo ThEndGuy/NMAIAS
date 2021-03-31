@@ -6,7 +6,9 @@
  
 ### Como instalar
 
-Ir a "code" (a verde) e **"download ZIP"**
+1 - Ir a "code" (a verde) e **"download ZIP"**
+
+2 - Abrir o NMAIAS.pyw
 
 ### Requerimentos
 
