@@ -11,6 +11,7 @@ __VERSION__ = 1.41
 
 os.system("pip install -r requirements.txt")
 
+
 GH = "https://github.com/ThEndGuy/NMAIAS"
 gh_file_nmaias = "https://raw.githubusercontent.com/ThEndGuy/NMAIAS/main/NMAIAS.pyw"
 r = requests.get(gh_file_nmaias)
