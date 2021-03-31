@@ -80,11 +80,9 @@ class Disciplina:
     def place_delete_cadeira_button(self, row, column, rowspan=1, columnspan=1, sticky=None):
         self.delete_cadeira.grid(row=row, column=column, rowspan=rowspan, columnspan=columnspan, sticky=sticky)
 
-def update_check():
+def update_check(startup=False):
     cloud_version = float(program_in_list[9][13:])
 
-    print(cloud_version)
-    print(__VERSION__ < cloud_version)
     if __VERSION__ < cloud_version:
         update = messagebox.askyesno("Atualização disponível!", "Uma nova atualização foi detetada. \n"
                                                                 "Versão local: V" + str(__VERSION__) + "\n"
@@ -92,8 +90,8 @@ def update_check():
                                                                 "Deseja atualizar?")
         if update:
             do_update()
-        else:
-            pass
+    elif not startup:
+        messagebox.showinfo("Informação","Já tem a versão mais atualizada, V" + str(__VERSION__))
 
 
 def do_update():
@@ -426,7 +424,7 @@ def write_update():
 updates_on = True
 
 if updates_on:
-    update_check()
+    update_check(True)
 
 
 nmaias = Label(frame0, text="NMAIAS - Não Me Apetece Ir Ao Site")
