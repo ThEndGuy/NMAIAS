@@ -2,14 +2,18 @@ from tkinter import *
 from tkinter import filedialog
 from tkinter import messagebox
 from tkinter import font
-import requests
 import webbrowser
 import os
 
 
+
 __VERSION__ = 1.41
 
-os.system("pip install -r requirements.txt")
+try:
+    import requests
+except:
+    os.system("pip install -r requirements.txt")
+    import requests
 
 
 GH = "https://github.com/ThEndGuy/NMAIAS"
