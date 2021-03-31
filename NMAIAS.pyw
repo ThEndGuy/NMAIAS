@@ -7,14 +7,16 @@ import webbrowser
 import os
 
 
-__VERSION__ = 1.29
+__VERSION__ = 1.3
 
 GH = "https://github.com/ThEndGuy/NMAIAS"
 gh_file_nmaias = "https://raw.githubusercontent.com/ThEndGuy/NMAIAS/main/NMAIAS.pyw"
 r = requests.get(gh_file_nmaias)
 program_in_list = r.text.split("\n")
+print(program_in_list)
 
 updates_on = True
+
 
 absolute_path = os.path.abspath(__file__)
 dir_path = os.path.dirname(absolute_path)
@@ -82,6 +84,7 @@ class Disciplina:
 
 def update_check():
     cloud_version = float(program_in_list[9][13:])
+
     print(cloud_version)
     if __VERSION__ < cloud_version:
         update = messagebox.askyesno("Atualização disponível!", "Uma nova atualização foi detetada. \n"
@@ -95,7 +98,7 @@ def update_check():
 
 
 def do_update():
-    self_file = open("NMAIAS.pyw","w")
+    self_file = open("NMAIAS.pyw", "w")
     self_file.writelines(program_in_list)
 
 
