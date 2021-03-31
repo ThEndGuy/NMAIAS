@@ -7,7 +7,8 @@
 ### Como instalar & utilizar
 
 1 - Ir a "code" (a verde) e **"download ZIP"**
-(Alternativamente, ir às versões, no lado e escolher a versão desejada)
+
+(Alternativamente, ir às versões, no lado, e escolher a versão desejada)
 
 2 - Abrir o NMAIAS.pyw
 
