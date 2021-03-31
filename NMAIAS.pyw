@@ -7,12 +7,14 @@ import webbrowser
 import os
 
 
-__VERSION__ = 1.3
+__VERSION__ = 1.29
 
 GH = "https://github.com/ThEndGuy/NMAIAS"
 gh_file_nmaias = "https://raw.githubusercontent.com/ThEndGuy/NMAIAS/main/NMAIAS.pyw"
 r = requests.get(gh_file_nmaias)
 program_in_list = r.text.split("\n")
+
+updates_on = True
 
 absolute_path = os.path.abspath(__file__)
 dir_path = os.path.dirname(absolute_path)
@@ -79,7 +81,8 @@ class Disciplina:
         self.delete_cadeira.grid(row=row, column=column, rowspan=rowspan, columnspan=columnspan, sticky=sticky)
 
 def update_check():
-    cloud_version = float(program_in_list[9])
+    cloud_version = float(program_in_list[9][13:])
+    print(cloud_version)
     if __VERSION__ < cloud_version:
         update = messagebox.askyesno("Atualização disponível!", "Uma nova atualização foi detetada. \n"
                                                                 "Versão local: V" + str(__VERSION__) + "\n"
@@ -412,6 +415,8 @@ try:
 except:
     pass
 
+if updates_on:
+    update_check()
 nmaias = Label(frame0, text="NMAIAS - Não Me Apetece Ir Ao Site")
 nmaias.grid(row=1, column=0, columnspan=10, sticky=W)
 
