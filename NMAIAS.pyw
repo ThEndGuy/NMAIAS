@@ -14,11 +14,7 @@ gh_file_nmaias = "https://raw.githubusercontent.com/ThEndGuy/NMAIAS/main/NMAIAS.
 r = requests.get(gh_file_nmaias)
 program_in_list = r.text.split("\n")
 
-
-
-
 updates_on = True
-
 
 absolute_path = os.path.abspath(__file__)
 dir_path = os.path.dirname(absolute_path)
