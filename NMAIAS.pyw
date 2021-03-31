@@ -7,14 +7,14 @@ import webbrowser
 import os
 
 
-__VERSION__ = 1.3
+__VERSION__ = 1.4
 
 GH = "https://github.com/ThEndGuy/NMAIAS"
 gh_file_nmaias = "https://raw.githubusercontent.com/ThEndGuy/NMAIAS/main/NMAIAS.pyw"
 r = requests.get(gh_file_nmaias)
 program_in_list = r.text.split("\n")
 
-updates_on = True
+
 
 absolute_path = os.path.abspath(__file__)
 dir_path = os.path.dirname(absolute_path)
@@ -26,16 +26,18 @@ root.iconphoto(False, icon)
 
 filename = dir_path + "\Cadeiras.txt"
 frame0 = Frame(root)
-frame0.grid(row=0, column=0)
+frame0.grid(row=0, column=0,columnspan=2)
 root.option_add('*font', 'Times 15')
 
-name_frame = Frame(root)
-name_frame.grid(row=2, column=0, sticky=E)
+br_frame = Frame(root)
+br_frame.grid(row=2, column=1, sticky=E)
+bl_frame = Frame(root)
+bl_frame.grid(row=2, column=0, sticky=W)
 frame1 = Frame(root)
 frame1.grid(row=1, column=0)
 
 frame2 = Frame(root)
-frame2.grid(row=3, column=0)
+frame2.grid(row=3, column=0,columnspan=2)
 
 has_custom_browser = "False"
 
@@ -415,26 +417,45 @@ try:
 except:
     pass
 
+def write_update():
+    pass
+
+
+
+
+updates_on = True
+
 if updates_on:
     update_check()
+
+
 nmaias = Label(frame0, text="NMAIAS - Não Me Apetece Ir Ao Site")
 nmaias.grid(row=1, column=0, columnspan=10, sticky=W)
 
-nmaias = Button(name_frame, text="GitHub", command=lambda: webbrowser.open_new_tab(
+github_button = Button(br_frame, text="GitHub", command=lambda: webbrowser.open_new_tab(
     GH), bd=0, fg="BLUE", activeforeground="RED")
-underline_font = font.Font(nmaias, nmaias.cget("font"))
+underline_font = font.Font(github_button, github_button.cget("font"))
 underline_font.configure(underline=True)
-nmaias.configure(font=underline_font)
+github_button.configure(font=underline_font)
+github_button.grid(row=1, column=1, columnspan=10, sticky=E)
 
-nmaias.grid(row=1, column=0, columnspan=10, sticky=E)
+
+# TODO add functionality for disabling auto updates on startup
+# updates_on_startup =Checkbutton(bl_frame, text="Perguntar por atualizações quando abre o programa",
+#                                 variable=updates_on, onvalue=True, offvalue=False, command=write_update)
+# updates_on_startup.grid(row=1, column=0, sticky=W)
+
 
 different_browser = Button(frame2, text="Links abrem no browser errado?", command=custom_browser)
-different_browser.grid(row=1000, column=2)
+different_browser.grid(row=1000, column=3)
 
 new_subject_button = Button(frame2, text="Adicionar nova cadeira", command=new_subject)
 new_subject_button.grid(row=1000)
 
 refresh = Button(frame2, text="Refresh", command=refresh_all_cadeiras)
 refresh.grid(row=1000, column=1)
+
+update = Button(frame2, text="Atualizar", command=update_check)
+update.grid(row=1000, column=2)
 
 root.mainloop()
