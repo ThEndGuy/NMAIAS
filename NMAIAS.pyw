@@ -7,7 +7,7 @@ import webbrowser
 import os
 
 
-__VERSION__ = 1.29
+__VERSION__ = 1.3
 
 GH = "https://github.com/ThEndGuy/NMAIAS"
 gh_file_nmaias = "https://raw.githubusercontent.com/ThEndGuy/NMAIAS/main/NMAIAS.pyw"
