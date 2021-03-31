@@ -13,10 +13,10 @@ GH = "https://github.com/ThEndGuy/NMAIAS"
 gh_file_nmaias = "https://raw.githubusercontent.com/ThEndGuy/NMAIAS/main/NMAIAS.pyw"
 r = requests.get(gh_file_nmaias)
 program_in_list = r.text.split("\n")
+paragraph_program_in_list = []
+for string in program_in_list:
+    paragraph_program_in_list.append(string + "\n")
 
-
-
-print(program_in_list)
 
 updates_on = True
 
@@ -103,7 +103,7 @@ def update_check():
 
 def do_update():
     self_file = open("NMAIAS.pyw", "w")
-    self_file.writelines(r.text)
+    self_file.writelines(paragraph_program_in_list)
 
 
 
