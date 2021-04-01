@@ -7,7 +7,7 @@ import os
 
 
 
-__VERSION__ = 1.42
+__VERSION__ = 1.43
 
 try:
     import requests
