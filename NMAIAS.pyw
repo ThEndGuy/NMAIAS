@@ -7,7 +7,7 @@ import os
 
 
 
-__VERSION__ = 1.44
+__VERSION__ = 1.45
 
 try:
     import requests
@@ -88,6 +88,7 @@ class Disciplina:
         self.delete_cadeira.grid(row=row, column=column, rowspan=rowspan, columnspan=columnspan, sticky=sticky)
 
 def update_check(startup=False):
+    r = requests.get(gh_file_nmaias)
     cloud_version = float(program_in_list[9][13:])
 
     if __VERSION__ < cloud_version:
