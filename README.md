@@ -15,3 +15,5 @@
 ### Requerimentos
 
 Python 3.7+
+
+[Pip](https://pip.pypa.io/en/stable/), adicionado ao PATH (ver como fazer isso [aqui(YouTube)](https://www.youtube.com/watch?v=G-HJg9CiPLw))
