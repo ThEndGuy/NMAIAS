@@ -7,7 +7,7 @@ import os
 
 
 
-__VERSION__ = 1.41
+__VERSION__ = 1.42
 
 try:
     import requests
@@ -104,6 +104,9 @@ def update_check(startup=False):
 def do_update():
     self_file = open("NMAIAS.pyw", "w", encoding='utf-8')
     self_file.writelines(r.text)
+    messagebox.showwarning("Atenção", "O programa vai fechar para atualizar. Por favor abra o NMAIAS outra vez")
+    os.system("python NMAIAS.pyw")
+    quit()
 
 
 
