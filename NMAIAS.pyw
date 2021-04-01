@@ -98,6 +98,7 @@ class Disciplina:
         self.delete_cadeira.grid(row=row, column=column, rowspan=rowspan, columnspan=columnspan, sticky=sticky)
 
 def update_check(startup=False):
+    global r
     r = requests.get(gh_file_nmaias)
     cloud_version = float(program_in_list[9][13:])
 
