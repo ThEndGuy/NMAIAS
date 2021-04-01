@@ -7,13 +7,24 @@ import os
 
 
 
-__VERSION__ = 1.45
+__VERSION__ = 1.46
+
+
+absolute_path = os.path.abspath(__file__)
+dir_path = os.path.dirname(absolute_path)
 
 try:
     import requests
 except:
     os.system("pip install -r requirements.txt")
-    import requests
+    try:
+        import requests
+    except:
+        messagebox.showwarning("Erro de pip",
+                               "Há algo de errado com o teu pip (provavelmente não está adicionado ao \"PATH\"). \n"
+                               "Por favor ler o README e ver o tutorial que se encontra lá.")
+        os.startfile(dir_path + "\README.md")
+
 
 
 GH = "https://github.com/ThEndGuy/NMAIAS"
@@ -23,8 +34,7 @@ program_in_list = r.text.split("\n")
 
 
 
-absolute_path = os.path.abspath(__file__)
-dir_path = os.path.dirname(absolute_path)
+
 
 root = Tk()
 root.title("NMAIAS - V" + str(__VERSION__))
