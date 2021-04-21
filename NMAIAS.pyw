@@ -27,6 +27,7 @@ except:
 
 
 
+
 GH = "https://github.com/ThEndGuy/NMAIAS"
 gh_file_nmaias = "https://raw.githubusercontent.com/ThEndGuy/NMAIAS/main/NMAIAS.pyw"
 r = requests.get(gh_file_nmaias)
