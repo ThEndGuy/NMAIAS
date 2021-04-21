@@ -7,7 +7,7 @@ import os
 
 
 
-__VERSION__ = 1.47
+__VERSION__ = 1.5
 
 
 absolute_path = os.path.abspath(__file__)
@@ -47,58 +47,30 @@ frame0.grid(row=0, column=0,columnspan=2)
 root.option_add('*font', 'Times 15')
 
 br_frame = Frame(root)
-br_frame.grid(row=2, column=1, sticky=E)
-bl_frame = Frame(root)
-bl_frame.grid(row=2, column=0, sticky=W)
-frame1 = Frame(root)
-frame1.grid(row=1, column=0)
+br_frame.grid(row=2, column=1,sticky=E)
 
-frame2 = Frame(root)
-frame2.grid(row=3, column=0,columnspan=2)
+frame_options = Frame(root)
+frame_options.grid(row=3, column=1, sticky=E)
+
+frame_main = Frame(root)
+frame_main.grid(row=1, column=0)
+
+frame_bottom = Frame(root)
+frame_bottom.grid(row=4, column=0,columnspan=2)
 
 has_custom_browser = "False"
 
 line_repeat_number = 7
 
 
-class Disciplina:
-    def __init__(self, name, y, x=0, rowspan=1, columnspan=1, sticky=None):
-        self.name = name
-        self.frame = LabelFrame(frame1, text=name)
-        self.frame.grid(row=y, column=x, rowspan=rowspan, columnspan=columnspan, sticky=sticky)
-
-    def create_zoom_button(self, link, mode=0):
-        if mode == 0:
-            self.zoom_button_name_T = Button(self.frame, text="Teórica", command=lambda: open_link(link))
-        elif mode == 1:
-            self.zoom_button_name_TP = Button(self.frame, text="Prática", command=lambda: open_link(link))
-        else:
-            self.zoom_button_name_L = Button(self.frame, text="Laboratorial", command=lambda: open_link(link))
-
-    def place_zoom_button(self, row, column, mode=0, rowspan=1, columnspan=1, sticky=None):
-        if mode == 0:
-            self.zoom_button_name_T.grid(row=row, column=column, rowspan=rowspan, columnspan=columnspan, sticky=sticky)
-        elif mode == 1:
-            self.zoom_button_name_TP.grid(row=row, column=column, rowspan=rowspan, columnspan=columnspan, sticky=sticky)
-        else:
-            self.zoom_button_name_L.grid(row=row, column=column, rowspan=rowspan, columnspan=columnspan, sticky=sticky)
-
-    def create_moodle_button(self, link):
-        self.moodle_button_name = Button(self.frame, text="Moodle",
-                                         command=lambda: open_link(link))
-
-    def place_moodle_button(self, row, column, rowspan=1, columnspan=1, sticky=None):
-        self.moodle_button_name.grid(row=row, column=column, rowspan=rowspan, columnspan=columnspan, sticky=sticky)
-
-    def delete_cadeira_button(self):
-        self.delete_cadeira = Button(self.frame, text="APAGAR",
-                                     command=lambda: apagar_e_refresh(self.name, filename))
-
-    def place_delete_cadeira_button(self, row, column, rowspan=1, columnspan=1, sticky=None):
-        self.delete_cadeira.grid(row=row, column=column, rowspan=rowspan, columnspan=columnspan, sticky=sticky)
-
-
 def update_check(startup=False):
+    try:
+        file = open(filename, "r")
+        lines = file.readlines()
+        if lines[3] == "auto_updates = False\n" and startup == True:
+            return
+    except:
+        pass
     global r
     r = requests.get(gh_file_nmaias)
     cloud_version = float(program_in_list[9][13:])
@@ -121,7 +93,6 @@ def do_update():
     quit()
 
 
-
 def open_link(link):
     read_file = open(filename, "r")
     cb = read_file.readline()[21:]
@@ -142,8 +113,8 @@ def new_subject():
         read_file = open(file, "r")
         lines = read_file.readlines()
         name_lines = []
-        if has_custom_browser == "True":
-            lines = lines[line_repeat_number:]
+        # if has_custom_browser == "True":
+        lines = lines[line_repeat_number:]
         for entry in lines:
             if lines.index(entry) % line_repeat_number == 0:
                 name_lines.append(entry)
@@ -151,6 +122,11 @@ def new_subject():
             messagebox.showerror("Erro", "Já existe uma cadeira com este nome")
         else:
             write_file = open(file, "a")
+            read_file = open(file, "r")
+            lines = read_file.readlines()
+            if not lines:
+                for _ in range(line_repeat_number):
+                    write_file.write("\n")
 
             write_file.write("name = " + name + " \n")
             write_file.write("moodle_id = " + moodle_id + " \n")
@@ -190,6 +166,8 @@ def new_subject():
                                     "pelo que vai ser criado um novo. Se já tem um ficheiro \" " + filename + "\","
                                     "verifique se ele esta na mesma pasta que este programa")
                 open(filename, "x")
+
+
             write_new_subject(filename, insert_cadeira_name.get(), insert_cadeira_id.get(),
                               insert_cadeira_zoom_T.get(), insert_cadeira_zoom_TP.get(), insert_cadeira_zoom_L.get(),
                               insert_password.get())
@@ -262,7 +240,7 @@ def new_subject():
 class disciplina:
     def __init__(self, name, y, x=0, rowspan=1, columnspan=1, sticky=None):
         self.name = name
-        self.frame = LabelFrame(frame1, text=name)
+        self.frame = LabelFrame(frame_main, text=name)
         self.frame.grid(row=y, column=x, rowspan=rowspan, columnspan=columnspan, sticky=sticky)
 
     def create_zoom_button(self, link, mode=0):
@@ -355,7 +333,7 @@ def apagar_e_refresh(name, file):
 
 def delete_cadeira(name, file):
     apagar = messagebox.askyesno("Aviso", "Todos os dados de " + name + " vão ser perdidos "
-                                                                        "\n Deseja mesmo apagar esta cadeira?")
+                                                                        "\nDeseja mesmo apagar esta cadeira?")
     if apagar:
         read_file = open(file, "r")
         lines = read_file.readlines()
@@ -374,15 +352,12 @@ def delete_cadeira(name, file):
 def refresh_all_cadeiras():
     file = open(filename, "r")
     lines = file.readlines()
-    global frame1
-    frame1.destroy()
-    frame1 = Frame(root)
-    frame1.grid(row=1, column=0)
+    global frame_main
+    frame_main.destroy()
+    frame_main = Frame(root)
+    frame_main.grid(row=1, column=0)
     if lines:
-        if lines[0][:3] == "has":
-            i = line_repeat_number
-        else:
-            i = 0
+        i = line_repeat_number
         while i < len(lines):
 
             if i % line_repeat_number == 0:  # Nome
@@ -431,22 +406,90 @@ def refresh_all_cadeiras():
             i += 1
 
 
+def options():
+
+
+    def auto_update():
+        global updates_on
+        updates_on = True
+        file = open(filename, "r")
+        liness = file.readlines()
+        file = open(filename, "w")
+        liness[3] = "auto_updates = True\n"
+        file.writelines(liness)
+        file.close()
+        auto_updates()
+
+
+    def not_auto_update():
+        global updates_on
+        updates_on = False
+        file = open(filename, "r")
+        liness = file.readlines()
+        file = open(filename, "w")
+        liness[3] = "auto_updates = False\n"
+
+        file.writelines(liness)
+        file.close()
+        auto_updates()
+
+    class Option:
+        def __init__(self, name, frame_name, row, col):
+            self.name = name
+            self.frame_name = frame_name
+            self.row = row
+            self.col = col
+            self.frame_name = LabelFrame(options_popup,text=self.name)
+            self.frame_name.grid(row=self.row, column=self.col)
+
+        def button(self, t1, t2, cmd1, cmd2, on="False"):
+            if on == "True":
+                self.b1 = Button(self.frame_name, text=t1, state=DISABLED, bg="CYAN")
+                self.b2 = Button(self.frame_name, text=t2, command=cmd2)
+            else:
+                self.b1 = Button(self.frame_name, text=t1, command=cmd1)
+                self.b2 = Button(self.frame_name, text=t2, state=DISABLED, bg="RED")
+            self.b1.grid(row=0, column=0)
+            self.b2.grid(row=0, column=1)
+
+        def reset(self):
+            self.frame_name.destroy()
+            self.frame_name = LabelFrame(options_popup,text=self.name)
+            self.frame_name.grid(row=self.row, column=self.col)
+
+
+    def auto_updates():
+        file = open(filename,"r")
+        lines = file.readlines()
+        if lines[3] != "\n":
+            enable = lines[3][15:-1]
+        else:
+            file = open(filename,"w")
+            lines[3] = "auto_updates = False\n"
+            file.writelines(lines)
+            enable = "False"
+
+        try:
+            updates.reset()
+        except:
+            pass
+        updates = Option("Auto atualizações", "AutoUpdate", 0, 0)
+        updates.button("ON","OFF", auto_update, not_auto_update, enable)
+
+    options_popup = Toplevel()
+    options_popup.wm_title("Opções")
+    auto_updates()
+
+
+
 try:
     open(filename)
     refresh_all_cadeiras()
 except:
     pass
 
-def write_update():
-    pass
 
-
-
-
-updates_on = True
-
-if updates_on:
-    update_check(startup=True)
+update_check(startup=True)
 
 
 nmaias = Label(frame0, text="NMAIAS - Não Me Apetece Ir Ao Site")
@@ -460,22 +503,20 @@ github_button.configure(font=underline_font)
 github_button.grid(row=1, column=1, columnspan=10, sticky=E)
 
 
-# TODO add functionality for disabling auto updates on startup
-# updates_on_startup =Checkbutton(bl_frame, text="Perguntar por atualizações quando abre o programa",
-#                                 variable=updates_on, onvalue=True, offvalue=False, command=write_update)
-# updates_on_startup.grid(row=1, column=0, sticky=W)
 
+options_button = Button(frame_options, text="Opções", command=options)
+options_button.grid(row=0, column=0, sticky=E)
 
-different_browser = Button(frame2, text="Links abrem no browser errado?", command=custom_browser)
+different_browser = Button(frame_bottom, text="Links abrem no browser errado?", command=custom_browser)
 different_browser.grid(row=1000, column=3)
 
-new_subject_button = Button(frame2, text="Adicionar nova cadeira", command=new_subject)
+new_subject_button = Button(frame_bottom, text="Adicionar nova cadeira", command=new_subject)
 new_subject_button.grid(row=1000)
 
-refresh = Button(frame2, text="Refresh", command=refresh_all_cadeiras)
+refresh = Button(frame_bottom, text="Refresh", command=refresh_all_cadeiras)
 refresh.grid(row=1000, column=1)
 
-update = Button(frame2, text="Atualizar", command=update_check)
+update = Button(frame_bottom, text="Atualizar", command=update_check)
 update.grid(row=1000, column=2)
 
 root.mainloop()
