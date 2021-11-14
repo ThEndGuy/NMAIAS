@@ -2,16 +2,15 @@ from tkinter import *
 from tkinter import filedialog
 from tkinter import messagebox
 from tkinter import font
+import pathlib
 import webbrowser
 import os
 
 
+__VERSION__ = 1.6
 
-__VERSION__ = 1.5
-
-
-absolute_path = os.path.abspath(__file__)
-dir_path = os.path.dirname(absolute_path)
+dir_path = pathlib.Path().absolute()
+absolute_path = os.path.join(dir_path, "NMAIAS.pyw")
 
 try:
     import requests
@@ -20,12 +19,12 @@ except:
     try:
         import requests
     except:
-        messagebox.showwarning("Erro de pip",
-                               "Há algo de errado com o teu pip (provavelmente não está adicionado ao \"PATH\"). \n"
-                               "Por favor ler o README e ver o tutorial que se encontra lá.")
+        messagebox.showwarning(
+            "Erro de pip",
+            'Há algo de errado com o teu pip (provavelmente não está adicionado ao "PATH"). \n'
+            "Por favor ler o README e ver o tutorial que se encontra lá.",
+        )
         os.startfile(dir_path + "\README.md")
-
-
 
 
 GH = "https://github.com/ThEndGuy/NMAIAS"
@@ -34,21 +33,18 @@ r = requests.get(gh_file_nmaias)
 program_in_list = r.text.split("\n")
 
 
-
-
-
 root = Tk()
 root.title("NMAIAS - V" + str(__VERSION__))
-icon = PhotoImage(file=dir_path + "\icon.png")
+icon = PhotoImage(file=os.path.join(dir_path, "icon.png"))
 root.iconphoto(False, icon)
 
-filename = dir_path + "\Cadeiras.txt"
+filename = os.path.join(dir_path, "Cadeiras.txt")
 frame0 = Frame(root)
-frame0.grid(row=0, column=0,columnspan=2)
-root.option_add('*font', 'Times 15')
+frame0.grid(row=0, column=0, columnspan=2)
+root.option_add("*font", "Times 15")
 
 br_frame = Frame(root)
-br_frame.grid(row=2, column=1,sticky=E)
+br_frame.grid(row=2, column=1, sticky=E)
 
 frame_options = Frame(root)
 frame_options.grid(row=3, column=1, sticky=E)
@@ -57,7 +53,7 @@ frame_main = Frame(root)
 frame_main.grid(row=1, column=0)
 
 frame_bottom = Frame(root)
-frame_bottom.grid(row=4, column=0,columnspan=2)
+frame_bottom.grid(row=4, column=0, columnspan=2)
 
 has_custom_browser = "False"
 
@@ -77,18 +73,23 @@ def update_check(startup=False):
     cloud_version = float(program_in_list[9][13:])
 
     if __VERSION__ < cloud_version:
-        want_update = messagebox.askyesno("Atualização disponível!", "Uma nova atualização foi detetada. \n"
-                                                                "Versão local: V" + str(__VERSION__) + "\n"
-                                                                "Versão atual: V" + str(cloud_version) + "\n"
-                                                                "Deseja atualizar?")
+        want_update = messagebox.askyesno(
+            "Atualização disponível!",
+            "Uma nova atualização foi detetada. \n"
+            "Versão local: V" + str(__VERSION__) + "\n"
+            "Versão atual: V" + str(cloud_version) + "\n"
+            "Deseja atualizar?",
+        )
         if want_update:
             do_update()
     elif not startup:
-        messagebox.showinfo("Informação","Já tem a versão mais atualizada, V" + str(__VERSION__))
+        messagebox.showinfo(
+            "Informação", "Já tem a versão mais atualizada, V" + str(__VERSION__)
+        )
 
 
 def do_update():
-    self_file = open("NMAIAS.pyw", "w", encoding='utf-8')
+    self_file = open("NMAIAS.pyw", "w", encoding="utf-8")
     self_file.writelines(r.text)
     os.startfile(absolute_path)
     quit()
@@ -156,24 +157,41 @@ def new_subject():
             write_file.close()
 
     def add_new_subject():
-        if insert_cadeira_name.get() != "" and insert_cadeira_id.get() != "" and (insert_cadeira_zoom_T.get() != "" or
-                                                                                  insert_cadeira_zoom_TP.get() != "" or
-                                                                                  insert_cadeira_zoom_L != ""):
+        if (
+            insert_cadeira_name.get() != ""
+            and insert_cadeira_id.get() != ""
+            and (
+                insert_cadeira_zoom_T.get() != ""
+                or insert_cadeira_zoom_TP.get() != ""
+                or insert_cadeira_zoom_L != ""
+            )
+        ):
             try:
                 open(filename)
-            except:
-                messagebox.showinfo("Informação",
-                                    "Não foi encontrado nenhum ficheiro chamado \" " + filename + "\" "
-                                    "pelo que vai ser criado um novo. Se já tem um ficheiro \" " + filename + "\","
-                                    "verifique se ele esta na mesma pasta que este programa")
+            except FileNotFoundError:
+                messagebox.showinfo(
+                    "Informação",
+                    'Não foi encontrado nenhum ficheiro chamado " ' + filename + '" '
+                    'pelo que vai ser criado um novo. Se já tem um ficheiro " '
+                    + filename
+                    + '",'
+                    "verifique se ele esta na mesma pasta que este programa",
+                )
                 open(filename, "x")
 
-
-            write_new_subject(filename, insert_cadeira_name.get(), insert_cadeira_id.get(),
-                              insert_cadeira_zoom_T.get(), insert_cadeira_zoom_TP.get(), insert_cadeira_zoom_L.get(),
-                              insert_password.get())
+            write_new_subject(
+                filename,
+                insert_cadeira_name.get(),
+                insert_cadeira_id.get(),
+                insert_cadeira_zoom_T.get(),
+                insert_cadeira_zoom_TP.get(),
+                insert_cadeira_zoom_L.get(),
+                insert_password.get(),
+            )
         else:
-            messagebox.showwarning("Aviso", "Por favor preencha todos necessários os campos em branco")
+            messagebox.showwarning(
+                "Aviso", "Por favor preencha todos necessários os campos em branco"
+            )
         refresh_all_cadeiras()
 
     def limpar():
@@ -189,31 +207,41 @@ def new_subject():
     cadeira_name.grid(row=0, column=0, columnspan=spancolumn, sticky=sticky_setting)
 
     insert_cadeira_name = Entry(popup, width=entry_width)
-    insert_cadeira_name.grid(row=1, column=0, columnspan=spancolumn, sticky=sticky_setting)
+    insert_cadeira_name.grid(
+        row=1, column=0, columnspan=spancolumn, sticky=sticky_setting
+    )
 
     cadeira_id = Label(popup, text="Link do moodle")
     cadeira_id.grid(row=2, column=0, columnspan=spancolumn, sticky=sticky_setting)
 
     insert_cadeira_id = Entry(popup, width=entry_width)
-    insert_cadeira_id.grid(row=3, column=0, columnspan=spancolumn, sticky=sticky_setting)
+    insert_cadeira_id.grid(
+        row=3, column=0, columnspan=spancolumn, sticky=sticky_setting
+    )
 
     cadeira_zoom_T = Label(popup, text="Link do zoom das T")
     cadeira_zoom_T.grid(row=4, column=0, columnspan=spancolumn, sticky=sticky_setting)
 
     insert_cadeira_zoom_T = Entry(popup, width=entry_width)
-    insert_cadeira_zoom_T.grid(row=5, column=0, columnspan=spancolumn, sticky=sticky_setting)
+    insert_cadeira_zoom_T.grid(
+        row=5, column=0, columnspan=spancolumn, sticky=sticky_setting
+    )
 
     cadeira_zoom_TP = Label(popup, text="Link do zoom das TP")
     cadeira_zoom_TP.grid(row=6, column=0, columnspan=spancolumn, sticky=sticky_setting)
 
     insert_cadeira_zoom_TP = Entry(popup, width=entry_width)
-    insert_cadeira_zoom_TP.grid(row=7, column=0, columnspan=spancolumn, sticky=sticky_setting)
+    insert_cadeira_zoom_TP.grid(
+        row=7, column=0, columnspan=spancolumn, sticky=sticky_setting
+    )
 
     cadeira_zoom_L = Label(popup, text="Link do zoom das PL")
     cadeira_zoom_L.grid(row=8, column=0, columnspan=spancolumn, sticky=sticky_setting)
 
     insert_cadeira_zoom_L = Entry(popup, width=entry_width)
-    insert_cadeira_zoom_L.grid(row=9, column=0, columnspan=spancolumn, sticky=sticky_setting)
+    insert_cadeira_zoom_L.grid(
+        row=9, column=0, columnspan=spancolumn, sticky=sticky_setting
+    )
 
     password = Label(popup, text="Password(Opcional): ")
     password.grid(row=10, column=0, columnspan=spancolumn, sticky=sticky_setting)
@@ -221,11 +249,19 @@ def new_subject():
     insert_password = Entry(popup, width=entry_width)
     insert_password.grid(row=11, column=0, columnspan=spancolumn, sticky=sticky_setting)
 
-    aviso = Label(popup, text="Basta preencher pelo menos um dos campos da T, TP ou PL ")
-    aviso.grid(row=13, rowspan=3, column=0, columnspan=spancolumn, sticky=sticky_setting)
+    aviso = Label(
+        popup, text="Basta preencher pelo menos um dos campos da T, TP ou PL "
+    )
+    aviso.grid(
+        row=13, rowspan=3, column=0, columnspan=spancolumn, sticky=sticky_setting
+    )
 
-    atencao = Label(popup,
-                    text="ATENÇÃO: Manter sempre o ficheiro \" " + filename + "\" na mesma pasta deste programa ")
+    atencao = Label(
+        popup,
+        text='ATENÇÃO: Manter sempre o ficheiro " '
+        + filename
+        + '" na mesma pasta deste programa ',
+    )
     atencao.grid(row=16, column=0, columnspan=spancolumn, sticky=sticky_setting)
 
     confirm = Button(popup, text="Confirmar", command=add_new_subject)
@@ -242,44 +278,99 @@ class disciplina:
     def __init__(self, name, y, x=0, rowspan=1, columnspan=1, sticky=None):
         self.name = name
         self.frame = LabelFrame(frame_main, text=name)
-        self.frame.grid(row=y, column=x, rowspan=rowspan, columnspan=columnspan, sticky=sticky)
+        self.frame.grid(
+            row=y, column=x, rowspan=rowspan, columnspan=columnspan, sticky=sticky
+        )
 
     def create_zoom_button(self, link, mode=0):
         if mode == 0:
-            self.zoom_button_name_T = Button(self.frame, text="Teórica", command=lambda: open_link(link))
+            self.zoom_button_name_T = Button(
+                self.frame, text="Teórica", command=lambda: open_link(link)
+            )
         elif mode == 1:
-            self.zoom_button_name_TP = Button(self.frame, text="Prática", command=lambda: open_link(link))
+            self.zoom_button_name_TP = Button(
+                self.frame, text="Prática", command=lambda: open_link(link)
+            )
         else:
-            self.zoom_button_name_L = Button(self.frame, text="Laboratorial", command=lambda: open_link(link))
+            self.zoom_button_name_L = Button(
+                self.frame, text="Laboratorial", command=lambda: open_link(link)
+            )
 
-    def place_zoom_button(self, row, column, mode=0, rowspan=1, columnspan=1, sticky=None):
+    def place_zoom_button(
+        self, row, column, mode=0, rowspan=1, columnspan=1, sticky=None
+    ):
         if mode == 0:
-            self.zoom_button_name_T.grid(row=row, column=column, rowspan=rowspan, columnspan=columnspan, sticky=sticky)
+            self.zoom_button_name_T.grid(
+                row=row,
+                column=column,
+                rowspan=rowspan,
+                columnspan=columnspan,
+                sticky=sticky,
+            )
         elif mode == 1:
-            self.zoom_button_name_TP.grid(row=row, column=column, rowspan=rowspan, columnspan=columnspan, sticky=sticky)
+            self.zoom_button_name_TP.grid(
+                row=row,
+                column=column,
+                rowspan=rowspan,
+                columnspan=columnspan,
+                sticky=sticky,
+            )
         else:
-            self.zoom_button_name_L.grid(row=row, column=column, rowspan=rowspan, columnspan=columnspan, sticky=sticky)
+            self.zoom_button_name_L.grid(
+                row=row,
+                column=column,
+                rowspan=rowspan,
+                columnspan=columnspan,
+                sticky=sticky,
+            )
 
     def create_moodle_button(self, link):
-        self.moodle_button_name = Button(self.frame, text="Moodle",
-                                         command=lambda: open_link(link))
+        self.moodle_button_name = Button(
+            self.frame, text="Moodle", command=lambda: open_link(link)
+        )
 
     def place_moodle_button(self, row, column, rowspan=1, columnspan=1, sticky=None):
-        self.moodle_button_name.grid(row=row, column=column, rowspan=rowspan, columnspan=columnspan, sticky=sticky)
+        self.moodle_button_name.grid(
+            row=row,
+            column=column,
+            rowspan=rowspan,
+            columnspan=columnspan,
+            sticky=sticky,
+        )
 
     def delete_cadeira_button(self):
-        self.delete_cadeira = Button(self.frame, text="APAGAR",
-                                     command=lambda: apagar_e_refresh(self.name, filename))
+        self.delete_cadeira = Button(
+            self.frame,
+            text="APAGAR",
+            command=lambda: apagar_e_refresh(self.name, filename),
+        )
 
-    def place_delete_cadeira_button(self, row, column, rowspan=1, columnspan=1, sticky=None):
-        self.delete_cadeira.grid(row=row, column=column, rowspan=rowspan, columnspan=columnspan, sticky=sticky)
+    def place_delete_cadeira_button(
+        self, row, column, rowspan=1, columnspan=1, sticky=None
+    ):
+        self.delete_cadeira.grid(
+            row=row,
+            column=column,
+            rowspan=rowspan,
+            columnspan=columnspan,
+            sticky=sticky,
+        )
 
     def password_button(self):
-        self.password_button_create = Button(self.frame, text="Copiar Password",
-                                             command=lambda: copy_password(self.name, filename))
+        self.password_button_create = Button(
+            self.frame,
+            text="Copiar Password",
+            command=lambda: copy_password(self.name, filename),
+        )
 
     def place_password_button(self, row, column, rowspan=1, columnspan=1, sticky=None):
-        self.password_button_create.grid(row=row, column=column, rowspan=rowspan, columnspan=columnspan, sticky=sticky)
+        self.password_button_create.grid(
+            row=row,
+            column=column,
+            rowspan=rowspan,
+            columnspan=columnspan,
+            sticky=sticky,
+        )
 
 
 def copy_password(name, files):
@@ -295,29 +386,32 @@ def copy_password(name, files):
 
 def custom_browser():
     global has_custom_browser
-    has_custom_browser = messagebox.askyesnocancel("Aviso", "Se o link abre no browser "
-                                                            "errado é porque está a usar um browser não conhecido."
-                                                            " Pretende alterar o browser selecionado? (Selecionar"
-                                                            " SEUBROWSER.exe)")
+    has_custom_browser = messagebox.askyesnocancel(
+        "Aviso",
+        "Se o link abre no browser "
+        "errado é porque está a usar um browser não conhecido."
+        " Pretende alterar o browser selecionado? (Selecionar"
+        " SEUBROWSER.exe)",
+    )
 
     if has_custom_browser is not None:
         read_file = open(filename, "r")
         lines = read_file.readlines()
         if lines[0][:3] == "has":
-            for i in range(line_repeat_number):
+            for _ in range(line_repeat_number):
                 lines.pop(0)
         read_file.close()
         write_file = open(filename, "w")
         if has_custom_browser is False:
             write_file.write("has_custom_browser = " + str(has_custom_browser) + " \n")
-            for i in range(line_repeat_number - 1):
+            for _ in range(line_repeat_number - 1):
                 write_file.write("\n")
         else:
             path = filedialog.askopenfilename(
                 title="Escolhe um browser",
                 initialdir=".",
-                filetype=(("exe files", "*.exe"),
-                          ("all files", "*.")))
+                filetype=(("exe files", "*.exe"), ("all files", "*.")),
+            )
             write_file.write("has_custom_browser = " + str(has_custom_browser) + " \n")
             write_file.write("custom_browser = " + path + " \n")
             for i in range(line_repeat_number - 2):
@@ -333,8 +427,11 @@ def apagar_e_refresh(name, file):
 
 
 def delete_cadeira(name, file):
-    apagar = messagebox.askyesno("Aviso", "Todos os dados de " + name + " vão ser perdidos "
-                                                                        "\nDeseja mesmo apagar esta cadeira?")
+    apagar = messagebox.askyesno(
+        "Aviso",
+        "Todos os dados de " + name + " vão ser perdidos "
+        "\nDeseja mesmo apagar esta cadeira?",
+    )
     if apagar:
         read_file = open(file, "r")
         lines = read_file.readlines()
@@ -363,7 +460,9 @@ def refresh_all_cadeiras():
 
             if i % line_repeat_number == 0:  # Nome
                 cadeira_name = lines[i][7:-2]
-                disc = disciplina(str(cadeira_name), i // line_repeat_number, columnspan=2, sticky=W)
+                disc = disciplina(
+                    str(cadeira_name), i // line_repeat_number, columnspan=2, sticky=W
+                )
             if i % line_repeat_number == line_repeat_number - 6:  # Moodle
                 disc.create_moodle_button(lines[i][12:-2])
                 disc.place_moodle_button(i // line_repeat_number, 0)
@@ -408,8 +507,6 @@ def refresh_all_cadeiras():
 
 
 def options():
-
-
     def auto_update():
         global updates_on
         updates_on = True
@@ -420,7 +517,6 @@ def options():
         file.writelines(liness)
         file.close()
         auto_updates()
-
 
     def not_auto_update():
         global updates_on
@@ -440,7 +536,7 @@ def options():
             self.frame_name = frame_name
             self.row = row
             self.col = col
-            self.frame_name = LabelFrame(options_popup,text=self.name)
+            self.frame_name = LabelFrame(options_popup, text=self.name)
             self.frame_name.grid(row=self.row, column=self.col)
 
         def button(self, t1, t2, cmd1, cmd2, on="False"):
@@ -455,38 +551,36 @@ def options():
 
         def reset(self):
             self.frame_name.destroy()
-            self.frame_name = LabelFrame(options_popup,text=self.name)
+            self.frame_name = LabelFrame(options_popup, text=self.name)
             self.frame_name.grid(row=self.row, column=self.col)
 
-
     def auto_updates():
-        file = open(filename,"r")
+        updates: Option
+        file = open(filename, "r")
         lines = file.readlines()
         if lines[3] != "\n":
             enable = lines[3][15:-1]
         else:
-            file = open(filename,"w")
+            file = open(filename, "w")
             lines[3] = "auto_updates = False\n"
             file.writelines(lines)
             enable = "False"
-
         try:
             updates.reset()
         except:
             pass
         updates = Option("Auto atualizações", "AutoUpdate", 0, 0)
-        updates.button("ON","OFF", auto_update, not_auto_update, enable)
+        updates.button("ON", "OFF", auto_update, not_auto_update, enable)
 
     options_popup = Toplevel()
     options_popup.wm_title("Opções")
     auto_updates()
 
 
-
 try:
     open(filename)
     refresh_all_cadeiras()
-except:
+except FileNotFoundError:
     pass
 
 
@@ -496,22 +590,31 @@ update_check(startup=True)
 nmaias = Label(frame0, text="NMAIAS - Não Me Apetece Ir Ao Site")
 nmaias.grid(row=1, column=0, columnspan=10, sticky=W)
 
-github_button = Button(br_frame, text="GitHub", command=lambda: webbrowser.open_new_tab(
-    GH), bd=0, fg="BLUE", activeforeground="RED")
+github_button = Button(
+    br_frame,
+    text="GitHub",
+    command=lambda: webbrowser.open_new_tab(GH),
+    bd=0,
+    fg="BLUE",
+    activeforeground="RED",
+)
 underline_font = font.Font(github_button, github_button.cget("font"))
 underline_font.configure(underline=True)
 github_button.configure(font=underline_font)
 github_button.grid(row=1, column=1, columnspan=10, sticky=E)
 
 
-
 options_button = Button(frame_options, text="Opções", command=options)
 options_button.grid(row=0, column=0, sticky=E)
 
-different_browser = Button(frame_bottom, text="Links abrem no browser errado?", command=custom_browser)
+different_browser = Button(
+    frame_bottom, text="Links abrem no browser errado?", command=custom_browser
+)
 different_browser.grid(row=1000, column=3)
 
-new_subject_button = Button(frame_bottom, text="Adicionar nova cadeira", command=new_subject)
+new_subject_button = Button(
+    frame_bottom, text="Adicionar nova cadeira", command=new_subject
+)
 new_subject_button.grid(row=1000)
 
 refresh = Button(frame_bottom, text="Refresh", command=refresh_all_cadeiras)
@@ -521,3 +624,4 @@ update = Button(frame_bottom, text="Atualizar", command=update_check)
 update.grid(row=1000, column=2)
 
 root.mainloop()
+
